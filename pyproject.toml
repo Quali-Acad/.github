@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "code-quali-acada"
+version = "0.1.0"
+description = "Biblioteca para acesso a dados academicos"
+authors = ["Vinicius Sanches <viniciussweber@hotmail.com>"]
+readme = "README.md"
+packages = [{include = "code_quali_acada"}]
+
+[tool.poetry.dependencies]
+python = ">=3.11.0,<3.13.0"
+pandas = "^2.1.1"
+beautifulsoup4 = "^4.12.2"
+requests = "^2.31.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
