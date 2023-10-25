@@ -153,38 +153,103 @@ for nota in avaliacao:
 cont = 0
 
 # Neste loop ocorre a formatação dos dados no modelo final para ser escrito no arquivo CSV.
-dados = []
-
 for e in texto_out:
     # print(e)
-    # for i, value in enumerate(e):
-    #     print(f"Índice {i}: {value}")
-#     dados.append([
-        e[0],  # Curso
-#         e[2],  # IES
-        e[1],  # Modalidade
-        e[2],  # Verbete
-        e[3],  # Titulação
-        e[4],  # Campus
-        e[5],  # Categoria
-#         e[6],  # Duração
-        e[7],  # Endereço
-#         e[11],  # Cidade
-#         e[12],  # Estado
-        e[8],  # Site
-#         notas[cont],  # Avaliação
-#         ano,  # Ano da Avaliação
-#     ])
+    
+    # Formata Curso
+    texto_out[cont][0] = e[0]
+    # print(texto_out[cont][0])
 
-# Crie o arquivo CSV
-header = [
-    "Curso", "IES", "Modalidade", "Verbete", "Titulação", "Campus", "Categoria", "Duração",
-    "Endereço", "Cidade", "Estado", "Site", "Avaliação", "Ano da Avaliação"
-]
+    # Formata IES
+    ies = str(e[2])
+    ies = ies.replace("IES: ", "")
+    texto_out[cont][1] = ies
 
-with open('guia_da_faculdade_definitivo.csv', 'w', newline='', encoding='utf-8') as f:
-    writer = csv.writer(f)
-    writer.writerow(header)
-    writer.writerows(dados)
 
-print("Finalizado!")
+    # Formata Modalidade
+    try:
+        modalidade = str(e[4])
+        modalidade = modalidade.split()
+        texto_out[cont][2] = modalidade[2]
+    
+    except:
+        if 'Rua:' in str(e[10]):
+            texto_out[cont][2] = "Presencial"
+        else:
+            texto_out[cont][2] = "EaD"
+    
+    # Formata Verbete
+    verbete = str(e[5])
+    verbete = verbete.replace("Verbete: ", "")
+    texto_out[cont][3] = verbete
+
+    # Formata Titulação
+    titulacao = str(e[6])
+    titulacao = titulacao.split()
+    texto_out[cont][4] = titulacao[1]
+
+    # Formata Campus
+    campus = str(e[7])
+    campus = campus.replace("Campus: ", "")
+    texto_out[cont][5] = campus
+
+    # Formata Categoria
+    categoria = str(e[8])
+    categoria = categoria.replace("Categoria: ", "")
+    texto_out[cont][6] = categoria
+
+    # Formata Duracao:
+    duracao = str(e[9])
+    duracao = duracao.replace("Duração: ", "")
+    texto_out[cont][7] = duracao
+
+    # Formata Endereco
+    # Verifica se é EAD ou não
+    if texto_out[cont][2] == "EaD":
+        texto_out[cont][8] = "" # -> Endereco
+        texto_out[cont][9] = "" # -> Cidade
+        texto_out[cont][10] = "" # -> Estado
+
+    else:
+        texto_out[cont][8] = str(e[10]) # -> Endereco
+        texto_out[cont][9] = str(e[11]).replace("Cidade:  ", "") # -> Cidade
+        texto_out[cont][10] = str(e[12]).replace("Estado: ", "")  # -> Estado
+
+    # Formata Site
+    site = str(e[len(e) - 1])
+    site = site.replace("Site: ", "")
+
+    # Formata Avaliacao
+    try:
+        texto_out[cont][11] = site
+        texto_out[cont][12] = notas[cont]
+        texto_out[cont][13] = ano
+
+    
+    except:
+        texto_out[cont].append(site)
+        texto_out[cont].append(notas[cont])
+        texto_out[cont].append(ano)
+
+    cont = cont + 1
+    
+# Aqui os dados são inseridos em uma lista que será iterada posteriormente para a escrita dos dados no arquivo CSV.
+resultado.append(texto_out)
+
+# Criação do Arquivo CSV
+
+# header = ["Curso", "IES", "Modalidade", "Verbete", "Titulação", "Campus", "Categoria", "Duracao", "Endereco", "Cidade", "Estado", "Site", "Avaliacao", "Ano da Avaliação"]
+
+# with open('guia_da_faculdade_definitivo.csv', 'w', newline="", encoding='utf-8') as f:
+	
+# 	writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+	
+# 	# Escerve o Header
+# 	writer.writerow(header)
+	
+# 	for e in resultado:
+# 		for i in e:
+# 			# Escreve os dados
+# 			writer.writerow(i)
+
+# print("Finalizado!")
